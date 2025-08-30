@@ -34,37 +34,14 @@ export default function NotesPageClient() {
     <div className={css.container}>
       <header className={css.toolbar}>
         <SearchBox text={searchQuery} onSearch={debouncedSetSearch} />
-
         {data && data.totalPages > 1 && (
-          <Pagination
-            pageCount={data.totalPages}
-            currentPage={page}
-            onPageChange={setPage}
-          />
+          <Pagination pageCount={data.totalPages} currentPage={page} onPageChange={setPage} />
         )}
-
-        <button className={css.button} onClick={() => setIsModalOpen(true)}>
-          Create note +
-        </button>
-
-        {isFetching && <span className={css.updating}>Updating…</span>}
+        <button className={css.button} onClick={() => setIsModalOpen(true)}>Create note +</button>
       </header>
 
-      {isLoading && !data && <p>Loading, please wait...</p>}
-
-      {isError && (
-        <p>Could not fetch the list of notes. {(error as Error).message}</p>
-      )}
-
-      {data && (
-        <>
-          {data.notes.length === 0 && !isFetching ? (
-            <p>No notes found</p>
-          ) : (
-            <NoteList notes={data.notes} />
-          )}
-        </>
-      )}
+      {isError && <p>Could not fetch the list of notes. {(error as Error).message}</p>}
+      {data && (data.notes.length === 0 ? <p>No notes found</p> : <NoteList notes={data.notes} />)}
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
