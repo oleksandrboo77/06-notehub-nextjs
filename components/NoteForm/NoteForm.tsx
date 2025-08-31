@@ -2,9 +2,12 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createNote } from '@/lib/api/notes';
-import type { CreateNoteInput } from '@/lib/api/notes';
+import { createNote, type CreateNoteInput } from '@/lib/api';
 import css from './NoteForm.module.css';
+
+interface NoteFormProps {
+  onClose: () => void;
+}
 
 const schema = Yup.object({
   title: Yup.string().min(3).max(50).required(),
@@ -14,7 +17,7 @@ const schema = Yup.object({
     .required(),
 });
 
-export default function NoteForm({ onClose }: { onClose: () => void }) {
+export default function NoteForm({ onClose }: NoteFormProps) {
   const qc = useQueryClient();
   const mutation = useMutation({
     mutationFn: (vals: CreateNoteInput) => createNote(vals),

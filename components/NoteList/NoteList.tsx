@@ -1,15 +1,19 @@
-"use client";
-import Link from "next/link";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteNote } from "@/lib/api/notes";
-import type { Note } from "@/types/note";
-import css from "./NoteList.module.css";
+'use client';
+import Link from 'next/link';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteNote } from '@/lib/api';
+import type { Note } from '@/types/note';
+import css from './NoteList.module.css';
 
-export default function NoteList({ notes }: { notes: Note[] }) {
+interface NoteListProps {
+  notes: Note[];
+}
+
+export default function NoteList({ notes }: NoteListProps) {
   const qc = useQueryClient();
   const mutation = useMutation({
     mutationFn: (id: string) => deleteNote(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["notes"] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['notes'] }),
   });
 
   return (
@@ -20,9 +24,15 @@ export default function NoteList({ notes }: { notes: Note[] }) {
           <p className={css.content}>{note.content}</p>
           <div className={css.footer}>
             <span className={css.tag}>{note.tag}</span>
-            <Link className={css.link} href={`/notes/${note.id}`}>View details</Link>
-            <button className={css.button} onClick={() => mutation.mutate(note.id)} disabled={mutation.isPending}>
-              {mutation.isPending ? "Deleting..." : "Delete"}
+            <Link className={css.link} href={`/notes/${note.id}`}>
+              View details
+            </Link>
+            <button
+              className={css.button}
+              onClick={() => mutation.mutate(note.id)}
+              disabled={mutation.isPending}
+            >
+              {mutation.isPending ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </li>
